@@ -56,8 +56,9 @@ Required Python packages:
 
    Columns required:
    - `Passenger`: Unique passenger identifier.
-   - `Schedule`: Schedule information.
+   - `Schedule`: Schedule information (example 9:00).
    - `Car`: Assigned car number (in `data2` only).
+   - `day_of_week`: Day of week as integer (1-7) (in `data2` only).
 
 2. **Run the Script**
    Execute the main script:
