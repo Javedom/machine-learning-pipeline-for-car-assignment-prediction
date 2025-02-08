@@ -67,7 +67,3 @@ This script generates two datasets for testing machine learning models that pred
 4  Passenger_12    10:00
 ```
 
------------------------------------------------------------
-📧 CONTACT:
------------------------------------------------------------
-For questions or feedback, please contact the repository maintainer.
