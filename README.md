@@ -12,8 +12,7 @@ This project provides a complete machine learning pipeline for predicting car as
 3. Usage
 4. Pipeline Steps
 5. Example
-6. Contributing
-7. License
+6. License
 
 ------------------------------------------------------------
 ✨ FEATURES
