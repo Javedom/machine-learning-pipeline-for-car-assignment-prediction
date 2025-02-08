@@ -121,5 +121,5 @@ Contributions are welcome! Fork the repository and submit a pull request with yo
 ------------------------------------------------------------
 📜 LICENSE
 ------------------------------------------------------------
-This project is licensed under the CCO licence.
+This project is licensed under the CC0 1.0 Universal license.
 
