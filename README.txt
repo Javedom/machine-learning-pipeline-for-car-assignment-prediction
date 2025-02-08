@@ -120,9 +120,5 @@ Contributions are welcome! Fork the repository and submit a pull request with yo
 ------------------------------------------------------------
 📜 LICENSE
 ------------------------------------------------------------
-This project is licensed under the MIT License. See the LICENSE file for more details.
+This project is licensed under the CCO licence.
 
-------------------------------------------------------------
-📧 CONTACT
-------------------------------------------------------------
-For questions or support, please open an issue in the repository.
