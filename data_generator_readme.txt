@@ -42,7 +42,7 @@ This script generates two datasets for testing machine learning models that pred
    ```
    python generate_data.py
    ```
-2. Use the generated `data2_complex.csv` for training and `data1_complex.csv` for testing or prediction.
+2. Use the generated `data2.csv` for training and `data1.csv` for testing or prediction.
 
 -----------------------------------------------------------
 📢 SAMPLE OUTPUT:
