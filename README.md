@@ -113,11 +113,6 @@ Test Accuracy: 0.88
 ```
 
 ------------------------------------------------------------
-🤝 CONTRIBUTING
-------------------------------------------------------------
-Contributions are welcome! Fork the repository and submit a pull request with your improvements or suggestions.
-
-------------------------------------------------------------
 📜 LICENSE
 ------------------------------------------------------------
 This project is licensed under the CC0 1.0 Universal license.
