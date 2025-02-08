@@ -3,7 +3,7 @@ import random
 
 # Parameters
 num_passengers = 200            # Total unique passengers
-num_historical_entries = 5000   # Total historical schedule entries (rows in dataset 2)
+num_historical_entries = 25000   # Total historical schedule entries (rows in dataset 2)
 group_size_range = (3, 5)       # Each group will have between 2 and 5 passengers
 cars = [1, 2, 3, 4, 5]          # Available cars
 
@@ -106,8 +106,8 @@ data1 = pd.DataFrame({
 # -----------------------------------------------------------------------------
 # Save datasets as CSV for testing
 # -----------------------------------------------------------------------------
-data2.to_csv("data2_complex.csv", index=False)
-data1.to_csv("data1_complex.csv", index=False)
+data2.to_csv("data2.csv", index=False)
+data1.to_csv("data1.csv", index=False)
 
 print("Test datasets generated:")
 print("Data2 (Historical) sample:")

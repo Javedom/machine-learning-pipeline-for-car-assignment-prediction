@@ -182,9 +182,9 @@ def tune_rf_with_optuna(X, y, n_trials=30):
             min_samples_split=min_samples_split,
             class_weight='balanced',
             random_state=42,
-            min_samples_leaf=4,
-            max_features='sqrt',
-            bootstrap=True
+            #min_samples_leaf=4,
+            #max_features='sqrt',
+            #bootstrap=True
 
         )
         
@@ -334,8 +334,8 @@ def predict_car_numbers(data1, model, encoder_passenger):
 # -----------------------------------------------------------------------------
 if __name__ == "__main__":
     # 1. Load Data (base names only; function tries CSV then XLSX)
-    data1, data1_format, data1_encoding = load_data("data1_complex")
-    data2, data2_format, data2_encoding = load_data("data2_complex")
+    data1, data1_format, data1_encoding = load_data("data1")
+    data2, data2_format, data2_encoding = load_data("data2")
     
     # 2. Preprocess Data (with safe schedule transform)
     data1, data2, encoder_schedule, encoder_passenger = preprocess_data(data1, data2)
@@ -354,7 +354,7 @@ if __name__ == "__main__":
     
     # 5b. Bayesian Optimization (Optuna)
     print("\n=== Hyperparameter Tuning with Optuna (Bayesian Optimization) ===")
-    best_model_optuna = tune_rf_with_optuna(X_all, y_all, n_trials=30)
+    best_model_optuna = tune_rf_with_optuna(X_all, y_all, n_trials=5)
     
     # Compare best_model_grid and best_model_optuna on the training data (or a validation set)
     grid_score = best_model_grid.score(X_all, y_all)
