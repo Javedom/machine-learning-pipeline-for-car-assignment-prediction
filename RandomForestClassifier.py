@@ -161,7 +161,7 @@ def grid_search_tuning(X, y):
     return best_model
 
 # -----------------------------------------------------------------------------
-# (NEW) 4b) Hyperparameter Tuning with Optuna (Bayesian Optimization)
+# 4b) Hyperparameter Tuning with Optuna (Bayesian Optimization)
 # -----------------------------------------------------------------------------
 def tune_rf_with_optuna(X, y, n_trials=30):
     """
@@ -181,18 +181,12 @@ def tune_rf_with_optuna(X, y, n_trials=30):
             max_depth=max_depth,
             min_samples_split=min_samples_split,
             class_weight='balanced',
-            random_state=42
+            random_state=42,
+            min_samples_leaf=4,
+            max_features='sqrt',
+            bootstrap=True
 
         )
-            #Configs you can you can use here. Example settings overfit the model to the data:
-            #n_estimators=500,     # Large number of trees
-            #max_depth=None,       # Trees grow as deep as they want
-            #min_samples_split=2,  # Minimum possible splitting constraint
-            #min_samples_leaf=1,   # Single sample per leaf is allowed
-            #bootstrap=False,      # Use the entire dataset per tree
-            #class_weight=None,    # Remove balancing
-            #random_state=42
-
         
         # Cross-validation for scoring
         skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
@@ -211,7 +205,19 @@ def tune_rf_with_optuna(X, y, n_trials=30):
     best_model = RandomForestClassifier(
         **best_params,
         class_weight='balanced',
-        random_state=42
+        random_state=42,
+        min_samples_leaf=4,
+        max_features='sqrt'
+
+            #Configs you can you can use here. Example settings overfit the model to the data:
+            #n_estimators=500,     # Large number of trees, 100 for less overfitting
+            #max_depth=None,       # Trees grow as deep as they want, 10 or 20 for less overfitting
+            #min_samples_split=2,  # Minimum possible splitting constraint, 10 for less overfitting
+            #min_samples_leaf=1,   # Single sample per leaf is allowed, 1-5, smaller number increases overfitting
+            #bootstrap=False,      # Use the entire dataset per tree
+            #class_weight=None,    # Remove balancing
+            #random_state=42
+            #max_features=None     #Lower max_features (e.g., "sqrt" or a small float) for smaller overfit, beware of underfitting. 'None' leads often to overfitting.
     )
     best_model.fit(X, y)
     
@@ -238,6 +244,15 @@ def train_model(data2, model=None):
     # If no model is provided, use a default RandomForest
     if model is None:
         model = RandomForestClassifier(n_estimators=100, random_state=42)
+
+        #Main configs for the model, examples overfit the data
+        # n_estimators=500,     # Large number of trees
+        #max_depth=None,       # Trees grow as deep as they want
+        #min_samples_split=2,  # Minimum possible splitting constraint
+        #min_samples_leaf=1,   # Single sample per leaf is allowed
+        #bootstrap=False,      # Use the entire dataset per tree
+        #class_weight=None,    # Remove balancing
+        #random_state=42
     
     model.fit(X_train, y_train)
     
@@ -339,12 +354,26 @@ if __name__ == "__main__":
     
     # 5b. Bayesian Optimization (Optuna)
     print("\n=== Hyperparameter Tuning with Optuna (Bayesian Optimization) ===")
-    best_model_optuna = tune_rf_with_optuna(X_all, y_all, n_trials=60)
+    best_model_optuna = tune_rf_with_optuna(X_all, y_all, n_trials=30)
     
-    # 6. Train Final Model (choose which best model you want to proceed with)
-    print("\n=== Training Final Model with Best Hyperparameters (Optuna) ===")
-    final_model, X_test, y_test = train_model(data2, model=best_model_optuna)
-    
+    # Compare best_model_grid and best_model_optuna on the training data (or a validation set)
+    grid_score = best_model_grid.score(X_all, y_all)
+    optuna_score = best_model_optuna.score(X_all, y_all)
+
+    print(f"Grid Search model score:   {grid_score:.4f}")
+    print(f"Optuna Search model score: {optuna_score:.4f}")
+
+    if optuna_score > grid_score:
+        print("\nOptuna model is better. Using best_model_optuna for final training.")
+        chosen_model = best_model_optuna
+    else:
+        print("\nGrid model is better. Using best_model_grid for final training.")
+        chosen_model = best_model_grid
+
+    # 6. Train Final Model (choose whichever did better)
+    print("\n=== Training Final Model with Best Hyperparameters ===")
+    final_model, X_test, y_test = train_model(data2, model=chosen_model)
+        
     # 7. Evaluate
     print("\n=== Model Evaluation on Test Set ===")
     eval_results = evaluate_model(final_model, X_test, y_test)
