@@ -306,10 +306,9 @@ def evaluate_model(model, X_test, y_test):
 # -----------------------------------------------------------------------------
 # 7) Predict Car Numbers (Day 2)
 # -----------------------------------------------------------------------------
-# 7) Predict Car Numbers (Original)
 '''
 def predict_car_numbers(data1, model, encoder_passenger):
-    # Existing implementation (if you wish to keep it for reference)
+    # This is an old implementation (if you wish to try it)
    
     predictions = []
     for idx, row in data1.iterrows():
@@ -326,7 +325,9 @@ def predict_car_numbers(data1, model, encoder_passenger):
     data1['Car_Predicted'] = predictions
     return data1
     '''
-
+''' If there is no direct historical match, the hybric approach function falls back on the trained model to predict the car number.
+This is crucial for handling new or rare combinations that weren't seen in the historical data.
+'''
 # 7b) Predict Car Numbers Using a Lookup (Hybrid Approach)
 def predict_car_numbers_with_lookup(data1, data2, model, encoder_passenger):
     # Build a lookup dictionary from data2 using 'Passenger' and 'Schedule' as the key.
