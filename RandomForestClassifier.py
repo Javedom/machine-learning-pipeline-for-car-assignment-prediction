@@ -182,7 +182,17 @@ def tune_rf_with_optuna(X, y, n_trials=30):
             min_samples_split=min_samples_split,
             class_weight='balanced',
             random_state=42
+
         )
+            #Configs you can you can use here. Example settings overfit the model to the data:
+            #n_estimators=500,     # Large number of trees
+            #max_depth=None,       # Trees grow as deep as they want
+            #min_samples_split=2,  # Minimum possible splitting constraint
+            #min_samples_leaf=1,   # Single sample per leaf is allowed
+            #bootstrap=False,      # Use the entire dataset per tree
+            #class_weight=None,    # Remove balancing
+            #random_state=42
+
         
         # Cross-validation for scoring
         skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
