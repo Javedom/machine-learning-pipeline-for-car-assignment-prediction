@@ -182,8 +182,8 @@ def tune_rf_with_optuna(X, y, n_trials=30):
             min_samples_split=min_samples_split,
             class_weight='balanced',
             random_state=42,
-            #min_samples_leaf=4,
-            #max_features='sqrt',
+            min_samples_leaf=5,
+            max_features='sqrt',
             #bootstrap=True
 
         )
@@ -306,13 +306,11 @@ def evaluate_model(model, X_test, y_test):
 # -----------------------------------------------------------------------------
 # 7) Predict Car Numbers (Day 2)
 # -----------------------------------------------------------------------------
+# 7) Predict Car Numbers (Original)
+'''
 def predict_car_numbers(data1, model, encoder_passenger):
-    """
-    For each record in data1:
-      - If the passenger exists in the historical data (encoder_passenger.classes_),
-        transform the passenger and use the model to predict the car.
-      - Otherwise, assign NaN for Car_Predicted.
-    """
+    # Existing implementation (if you wish to keep it for reference)
+   
     predictions = []
     for idx, row in data1.iterrows():
         passenger = row['Passenger']
@@ -325,6 +323,30 @@ def predict_car_numbers(data1, model, encoder_passenger):
             predictions.append(pred)
         else:
             predictions.append(np.nan)
+    data1['Car_Predicted'] = predictions
+    return data1
+    '''
+
+# 7b) Predict Car Numbers Using a Lookup (Hybrid Approach)
+def predict_car_numbers_with_lookup(data1, data2, model, encoder_passenger):
+    # Build a lookup dictionary from data2 using 'Passenger' and 'Schedule' as the key.
+    lookup = data2.set_index(['Passenger', 'Schedule'])['Car'].to_dict()
+    
+    predictions = []
+    for idx, row in data1.iterrows():
+        key = (row['Passenger'], row['Schedule'])
+        if key in lookup:
+            predictions.append(lookup[key])
+        else:
+            if row['Passenger'] in encoder_passenger.classes_:
+                passenger_encoded = encoder_passenger.transform([row['Passenger']])[0]
+                schedule_encoded = row['Schedule_Encoded']
+                X_new = pd.DataFrame([[passenger_encoded, schedule_encoded]],
+                                     columns=['Passenger_Encoded', 'Schedule_Encoded'])
+                pred = model.predict(X_new)[0]
+                predictions.append(pred)
+            else:
+                predictions.append(np.nan)
     
     data1['Car_Predicted'] = predictions
     return data1
@@ -354,7 +376,7 @@ if __name__ == "__main__":
     
     # 5b. Bayesian Optimization (Optuna)
     print("\n=== Hyperparameter Tuning with Optuna (Bayesian Optimization) ===")
-    best_model_optuna = tune_rf_with_optuna(X_all, y_all, n_trials=5)
+    best_model_optuna = tune_rf_with_optuna(X_all, y_all, n_trials=10)
     
     # Compare best_model_grid and best_model_optuna on the training data (or a validation set)
     grid_score = best_model_grid.score(X_all, y_all)
@@ -378,9 +400,9 @@ if __name__ == "__main__":
     print("\n=== Model Evaluation on Test Set ===")
     eval_results = evaluate_model(final_model, X_test, y_test)
     
-    # 8. Predict Car Assignments for Day 2
-    updated_data1 = predict_car_numbers(data1, final_model, encoder_passenger)
-    print("\n🚗 Updated Data Set 1 - Assigned Car Numbers (Using Tuned RF):")
+    # 8. Predict Car Assignments for Day 2 using the hybrid lookup approach
+    updated_data1 = predict_car_numbers_with_lookup(data1, data2, final_model, encoder_passenger)
+    print("\n🚗 Updated Data Set 1 - Assigned Car Numbers (Using Tuned RF with Lookup):")
     print(updated_data1)
     
     # 9. Save Output
