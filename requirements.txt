@@ -5,3 +5,4 @@ scikit-learn
 chardet
 optuna
 matplotlib
+openpyxl
