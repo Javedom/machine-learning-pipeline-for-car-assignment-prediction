@@ -43,6 +43,7 @@ Required Python packages:
 - Chardet
 - Optuna
 - Matplotlib
+- openpyxl
 
 ------------------------------------------------------------
 🔧 USAGE
