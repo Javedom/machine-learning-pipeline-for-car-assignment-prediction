@@ -206,8 +206,9 @@ def tune_rf_with_optuna(X, y, n_trials=30):
         **best_params,
         class_weight='balanced',
         random_state=42,
-        min_samples_leaf=4,
-        max_features='sqrt'
+        min_samples_leaf=5,
+        max_features='sqrt',
+       
 
             #Configs you can you can use here. Example settings overfit the model to the data:
             #n_estimators=500,     # Large number of trees, 100 for less overfitting
